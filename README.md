@@ -1,5 +1,11 @@
 # Restic Backup Module
 
+> **⚠️ Status: Pre-Release (Development Version)**
+> 
+> This module is in active development. While functional and safe for testing in development environments, it is **NOT recommended for production use** until the first stable (1.0) release. The stable release will include security audits and official support commitments.
+> 
+> For production use, please **star the repository on GitHub** to be notified when a stable release becomes available.
+
 Intelligent, incremental file backups for Drupal using the free, open-source **Restic** tool.
 
 ## About Restic (Free, Open Source)
