@@ -22,9 +22,11 @@ The Restic Backup module provides automated, incremental file backups for Drupal
 - **Integrates with Drupal cron** for scheduled backups
 - **Provides Drush commands** for manual operations and automation
 
-This module is designed to complement database backup solutions like Backup & Migrate by handling file backups intelligently. Unlike traditional backup tools that back up everything, Restic Backup recognizes that code in version control is already protected by your Git repository and focuses on protecting user uploads, custom data, and runtime files.
+Together with Retention Database Backup (for database backups) and Git (for code management), Restic Backup completes the full backup strategy. Unlike traditional backup tools that back up everything, Restic Backup recognizes that code in version control is already protected by your Git repository and focuses on protecting user uploads, custom data, and runtime files.
 
-## Feature Comparison with Backup & Migrate
+## Feature Comparison: Restic Backup vs Backup & Migrate
+
+**Note:** This comparison is provided for reference. For complete backup coverage, the recommended approach is to use **Git + Retention Database Backup + Restic Backup together**, which eliminates the need for Backup & Migrate.
 
 | Feature | Restic Backup | Backup & Migrate |
 |---------|---------------|------------------|
