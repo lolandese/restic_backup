@@ -15,13 +15,14 @@ This module leverages **Restic**, a completely free and open-source backup tool:
 The Restic Backup module provides automated, incremental file backups for Drupal sites. It:
 
 - **Automatically discovers files** using `.gitignore` rules and Drupal-specific patterns
+- **Focuses on files outside version control**: Excludes code already protected by Git (`.git/`, vendor/, themes, modules) - only backs up dynamic runtime files that need protection
 - **Excludes unnecessary files** like dependencies, regenerable assets, and version control
 - **Enforces encryption** for sensitive files (settings.php, .env, private files)
 - **Supports multiple storage backends** (local, SFTP, S3, B2, etc.)
 - **Integrates with Drupal cron** for scheduled backups
 - **Provides Drush commands** for manual operations and automation
 
-This module is designed to complement database backup solutions like Backup & Migrate by handling file backups intelligently.
+This module is designed to complement database backup solutions like Backup & Migrate by handling file backups intelligently. Unlike traditional backup tools that back up everything, Restic Backup recognizes that code in version control is already protected by your Git repository and focuses on protecting user uploads, custom data, and runtime files.
 
 ## Feature Comparison with Backup & Migrate
 
@@ -40,10 +41,11 @@ This module is designed to complement database backup solutions like Backup & Mi
 | **Bandwidth Optimization** | ✅ Incremental only | ❌ Full backups |
 | **Cost Optimization** | ✅ Dedup + compression | ✅ Compression only |
 | **Scheduled Backups** | ✅ Via cron | ✅ Via UI |
+| **Focuses on Non-Git Files** | ✅ Yes (smart exclusion) | ❌ No (backs up everything) |
 
 **Key Differences:**
-- **Restic Backup**: Optimized for **files and complete system backups** with cloud provider support
-- **Backup & Migrate**: Optimized for **database backups** with restore UI
+- **Restic Backup**: Optimized for **runtime files not in version control** (user uploads, custom data). Smart about what's already protected by Git.
+- **Backup & Migrate**: Complete site backup including code and dependencies (duplicates what Git already protects)
 
 ## Complementary Modules
 
