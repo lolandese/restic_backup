@@ -15,6 +15,39 @@ The Restic Backup module provides automated, incremental file backups for Drupal
 
 This module is designed to complement database backup solutions like Backup & Migrate by handling file backups intelligently.
 
+## Feature Comparison with Backup & Migrate
+
+| Feature | Restic Backup | Backup & Migrate |
+|---------|---------------|------------------|
+| **File Backups** | ✅ Yes (primary) | ⚠️ Limited |
+| **Database Backups** | ✅ Yes | ✅ Yes (primary) |
+| **Multiple Storage Backends** | ✅ Yes (S3, B2, Azure, SFTP) | ⚠️ Limited |
+| **Incremental Backups** | ✅ Native | ❌ Full backups only |
+| **Deduplication** | ✅ Automatic | ❌ No |
+| **Encryption** | ✅ AES-256 | ✅ Basic |
+| **Compression** | ✅ Automatic | ✅ Optional |
+| **Browse Snapshots** | ✅ Yes | ❌ No |
+| **Restore Individual Files** | ✅ Yes | ⚠️ Limited |
+| **Web Interface** | ✅ Full UI | ✅ Full UI |
+| **Bandwidth Optimization** | ✅ Incremental only | ❌ Full backups |
+| **Cost Optimization** | ✅ Dedup + compression | ✅ Compression only |
+| **Scheduled Backups** | ✅ Via cron | ✅ Via UI |
+
+**Key Differences:**
+- **Restic Backup**: Optimized for **files and complete system backups** with cloud provider support
+- **Backup & Migrate**: Optimized for **database backups** with restore UI
+
+## Complementary Modules
+
+This module works best as part of a complete backup strategy:
+
+- **[Retention Database Backup](../retention_database_backup/)** - Specialized database backup with intelligent retention policies (daily, weekly, monthly, yearly tiers). Use this for database-specific backups with automatic cleanup and git integration.
+
+**Recommended Architecture:**
+1. Use **Retention Database Backup** for database backups with intelligent retention policies
+2. Use **Restic Backup** for complete file system backups and remote storage consolidation
+3. Both modules work independently but complement each other for comprehensive protection
+
 ### 🚨 Disaster Recovery
 
 **For complete site recovery scenarios** (database corruption, server loss, total disaster), see **[DISASTER_RECOVERY.md](DISASTER_RECOVERY.md)**.
