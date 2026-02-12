@@ -1,0 +1,8 @@
+services:
+  restic_backup.commands:
+    class: Drupal\restic_backup\Drush\ResticCommands
+    arguments:
+      - '@restic_backup.manager'
+      - '@restic_backup.file_discovery'
+    tags:
+      - { name: 'drush.command' }

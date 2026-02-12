@@ -1,0 +1,52 @@
+{#
+/**
+ * Dashboard template for Restic Backup status and actions.
+ *
+ * @ingroup restic_backup
+ */
+#}
+
+<div class="restic-backup-dashboard">
+  <h2>{{ 'Restic Backup Dashboard'|trans }}</h2>
+
+  {% if status_summary %}
+    <div class="status-section">
+      <h3>{{ 'Status Summary'|trans }}</h3>
+      <div class="status-grid">
+        {% for key, value in status_summary %}
+          <div class="status-item">
+            <strong>{{ key|trans }}:</strong> {{ value }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if latest_backup %}
+    <div class="latest-backup-section">
+      <h3>{{ 'Latest Backup'|trans }}</h3>
+      <div class="backup-info">
+        <p><strong>{{ 'Snapshot ID'|trans }}:</strong> {{ latest_backup.id }}</p>
+        <p><strong>{{ 'Date'|trans }}:</strong> {{ latest_backup.date|date }}</p>
+        <p><strong>{{ 'Size'|trans }}:</strong> {{ latest_backup.size|format_bytes }}</p>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if recent_logs %}
+    <div class="recent-logs-section">
+      <h3>{{ 'Recent Operations'|trans }}</h3>
+      <div class="logs-list">
+        {# TODO: Render recent backup logs #}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="actions">
+    <a href="{{ path('restic_backup.admin_setup') }}" class="button">{{ 'Setup'|trans }}</a>
+    <a href="{{ path('restic_backup.admin_files') }}" class="button">{{ 'Choose Files'|trans }}</a>
+    <a href="{{ path('restic_backup.admin_policy') }}" class="button">{{ 'Policy & Schedule'|trans }}</a>
+    <a href="{{ path('restic_backup.snapshots_list') }}" class="button">{{ 'View Snapshots'|trans }}</a>
+    <a href="{{ path('restic_backup.logs') }}" class="button">{{ 'View Logs'|trans }}</a>
+  </div>
+</div>

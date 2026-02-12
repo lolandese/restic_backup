@@ -1,0 +1,6 @@
+restic_backup.admin_page:
+  title: 'Restic Backup'
+  description: 'Manage incremental file backups using Restic'
+  route_name: restic_backup.admin_page
+  parent: system.admin_config_system
+  weight: 50

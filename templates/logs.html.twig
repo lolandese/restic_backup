@@ -1,0 +1,46 @@
+{#
+/**
+ * Logs template for Restic Backup operations.
+ *
+ * @ingroup restic_backup
+ */
+#}
+
+<div class="restic-logs">
+  <h2>{{ 'Backup Operation Logs'|trans }}</h2>
+
+  {% if logs %}
+    <table class="logs-table">
+      <thead>
+        <tr>
+          <th>{{ 'Timestamp'|trans }}</th>
+          <th>{{ 'Operation'|trans }}</th>
+          <th>{{ 'Status'|trans }}</th>
+          <th>{{ 'Details'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr class="log-status-{{ log.severity }}">
+            <td>{{ log.timestamp|date }}</td>
+            <td>{{ log.message }}</td>
+            <td>
+              {% if log.severity == 'error' %}
+                <span class="status error">{{ 'Failed'|trans }}</span>
+              {% elseif log.severity == 'warning' %}
+                <span class="status warning">{{ 'Warning'|trans }}</span>
+              {% else %}
+                <span class="status success">{{ 'Success'|trans }}</span>
+              {% endif %}
+            </td>
+            <td>{{ log.variables|json_encode }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="messages messages--info">
+      {{ 'No logs found.'|trans }}
+    </div>
+  {% endif %}
+</div>

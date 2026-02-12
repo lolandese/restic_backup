@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * @file
+ * Restic Backup module - hooks and module-level functionality.
+ *
+ * This module provides intelligent, incremental file backups for Drupal
+ * using the Restic backup tool. It automatically discovers files using
+ * .gitignore rules and Drupal-specific patterns.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function restic_backup_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.restic_backup':
+      return [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['restic-help']],
+        'intro' => [
+          '#markup' => '<p>' . t(
+            'The Restic Backup module provides intelligent, incremental file backups ' .
+            'for your Drupal site using Restic. It automatically categorizes files, ' .
+            'enforces encryption for sensitive files, and integrates with Drupal cron ' .
+            'for scheduled backups.'
+          ) . '</p>',
+        ],
+        'features' => [
+          '#markup' => '<h3>' . t('Features') . '</h3><ul>' .
+            '<li>' . t('Intelligent file discovery based on .gitignore') . '</li>' .
+            '<li>' . t('Automatic detection of Drupal regenerable files') . '</li>' .
+            '<li>' . t('Encryption requirement for sensitive files (settings.php, .env, private files)') . '</li>' .
+            '<li>' . t('Multi-site support') . '</li>' .
+            '<li>' . t('Scheduled backups via Drupal cron') . '</li>' .
+            '<li>' . t('Snapshot management and File restoration') . '</li>' .
+            '</ul>',
+        ],
+        'setup' => [
+          '#markup' => '<h3>' . t('Getting Started') . '</h3><ol>' .
+            '<li>' . t('Go to <a href="@url">Restic Backup configuration</a>', ['@url' => '/admin/config/system/restic-backup']) . '</li>' .
+            '<li>' . t('Click <strong>Setup</strong> to configure the Restic repository') . '</li>' .
+            '<li>' . t('Choose files to backup using the <strong>Files</strong> option') . '</li>' .
+            '<li>' . t('Configure retention policies and backup schedule') . '</li>' .
+            '</ol>',
+        ],
+        'commands' => [
+          '#markup' => '<h3>' . t('Drush Commands') . '</h3><pre><code>' .
+            "drush restic:init\n" .
+            "drush restic:backup\n" .
+            "drush restic:snapshots\n" .
+            "drush restic:restore [snapshot-id]\n" .
+            "drush restic:prune\n" .
+            "drush restic:validate\n" .
+            "drush restic:stats\n" .
+            '</code></pre>',
+        ],
+      ];
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function restic_backup_theme($existing, $type, $theme, $path) {
+  return [
+    'restic_backup_dashboard' => [
+      'variables' => [
+        'status_summary' => [],
+        'latest_backup' => [],
+        'recent_logs' => [],
+      ],
+      'template' => 'dashboard',
+    ],
+    'restic_backup_file_selection' => [
+      'variables' => [
+        'file_categories' => [],
+        'encryption_enabled' => false,
+      ],
+      'template' => 'file-selection',
+    ],
+    'restic_backup_snapshots_list' => [
+      'variables' => [
+        'snapshots' => [],
+      ],
+      'template' => 'snapshots-list',
+    ],
+    'restic_backup_logs' => [
+      'variables' => [
+        'logs' => [],
+      ],
+      'template' => 'logs',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Performs background file scanning based on configured frequency.
+ */
+function restic_backup_cron() {
+  $config = \Drupal::config('restic_backup.settings');
+  $state = \Drupal::state();
+
+  // 1. FILE DISCOVERY SCAN (if configured)
+  $scan_frequency = $config->get('file_scan_frequency') ?? 'daily';
+
+  if ($scan_frequency !== 'never') {
+    $last_scan = $state->get('restic_backup.last_file_scan', 0);
+    $current_time = time();
+    $should_scan = FALSE;
+
+    switch ($scan_frequency) {
+      case 'every_cron':
+        $should_scan = TRUE;
+        break;
+
+      case 'daily':
+        // Scan if more than 24 hours since last scan
+        $should_scan = ($current_time - $last_scan) >= 86400;
+        break;
+
+      case 'weekly':
+        // Scan if more than 7 days since last scan
+        $should_scan = ($current_time - $last_scan) >= 604800;
+        break;
+    }
+
+    if ($should_scan) {
+      try {
+        $file_discovery = \Drupal::service('restic_backup.file_discovery');
+        $file_discovery->scanAndCache();
+        $state->set('restic_backup.last_file_scan', $current_time);
+        \Drupal::logger('restic_backup')->info('Background file scan completed');
+      }
+      catch (\Exception $e) {
+        \Drupal::logger('restic_backup')->error('Background file scan failed: @error', [
+          '@error' => $e->getMessage(),
+        ]);
+      }
+    }
+  }
+
+  // 2. SCHEDULED BACKUPS (existing logic)
+  if (!$config->get('enabled')) {
+    return;
+  }
+
+  // Get last cron run time
+  $last_run = $state->get('restic_backup.last_cron_run', 0);
+  $current_time = time();
+  $time_diff = $current_time - $last_run;
+
+  // TODO: Implement cron expression parsing for flexible scheduling
+  // For now, simple 24-hour check
+  if ($time_diff < 86400) {
+    return;
+  }
+
+  // Queue backup job for async processing
+  $queue = \Drupal::queue('restic_backup_jobs');
+  $queue->createItem([
+    'operation' => 'backup',
+    'timestamp' => $current_time,
+  ]);
+
+  $state->set('restic_backup.last_cron_run', $current_time);
+  \Drupal::logger('restic_backup')->info('Backup job queued via cron');
+}

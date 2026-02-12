@@ -1,0 +1,12 @@
+administer restic backup:
+  title: 'Administer Restic Backup'
+  description: 'Full access to configure backups, run backups, and manage retention policies'
+  restrict access: true
+
+access restic backup logs:
+  title: 'Access Restic Backup Logs'
+  description: 'View backup operation logs and status'
+
+restore from backup:
+  title: 'Restore from Backup'
+  description: 'Restore files from backup snapshots'

@@ -1,0 +1,70 @@
+{#
+/**
+ * File selection template for Restic Backup.
+ *
+ * @ingroup restic_backup
+ */
+#}
+
+<div class="restic-file-selection">
+  <h2>{{ 'Choose Files to Backup'|trans }}</h2>
+
+  {% if file_categories %}
+    <div class="file-categories">
+
+      {# Public Files #}
+      <fieldset class="file-category public-files">
+        <legend>📁 {{ 'Public Files (User Uploads)'|trans }}</legend>
+        <div class="file-list">
+          {# TODO: Render public file checkboxes #}
+        </div>
+      </fieldset>
+
+      {# Private Files #}
+      <fieldset class="file-category private-files requires-encryption">
+        <legend>🔒 {{ 'Private Files (Requires Encryption)'|trans }}</legend>
+        {% if not encryption_enabled %}
+          <div class="encryption-warning messages messages--warning">
+            {{ 'Encryption not enabled. These files will be excluded.'|trans }}
+          </div>
+        {% endif %}
+        <div class="file-list">
+          {# TODO: Render private file checkboxes #}
+        </div>
+      </fieldset>
+
+      {# Sensitive Config #}
+      <fieldset class="file-category sensitive-config requires-encryption">
+        <legend>🔒 {{ 'Sensitive Configuration (Requires Encryption)'|trans }}</legend>
+        {% if not encryption_enabled %}
+          <div class="encryption-warning messages messages--warning">
+            {{ 'Encryption not enabled. These files will be excluded.'|trans }}
+          </div>
+        {% endif %}
+        <div class="file-list">
+          {# TODO: Render sensitive config checkboxes #}
+        </div>
+      </fieldset>
+
+      {# Regenerable Files #}
+      <details class="file-category regenerable">
+        <summary>{{ 'Regenerable Files (Auto-Excluded)'|trans }}</summary>
+        <div class="regenerable-info">
+          {{ 'These files are auto-generated and safe to skip:'|trans }}
+        </div>
+        <ul>
+          {# TODO: Render regenerable files list #}
+        </ul>
+      </details>
+
+      {# Dependencies #}
+      <details class="file-category dependencies">
+        <summary>{{ 'Dependencies (Auto-Excluded)'|trans }}</summary>
+        <ul>
+          {# TODO: Render dependencies list #}
+        </ul>
+      </details>
+
+    </div>
+  {% endif %}
+</div>

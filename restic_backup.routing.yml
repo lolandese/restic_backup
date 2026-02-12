@@ -1,0 +1,64 @@
+restic_backup.admin_page:
+  path: '/admin/config/system/restic-backup'
+  defaults:
+    _form: '\Drupal\restic_backup\Form\DashboardForm'
+    _title: 'Restic Backup'
+  requirements:
+    _permission: 'administer restic backup'
+
+restic_backup.admin_setup:
+  path: '/admin/config/system/restic-backup/setup'
+  defaults:
+    _form: '\Drupal\restic_backup\Form\SetupForm'
+    _title: 'Setup Restic Repository'
+  requirements:
+    _permission: 'administer restic backup'
+
+restic_backup.admin_files:
+  path: '/admin/config/system/restic-backup/file-selection'
+  defaults:
+    _form: '\Drupal\restic_backup\Form\FileSelectionForm'
+    _title: 'Choose Files to Backup'
+  requirements:
+    _permission: 'administer restic backup'
+
+restic_backup.admin_policy:
+  path: '/admin/config/system/restic-backup/policy'
+  defaults:
+    _form: '\Drupal\restic_backup\Form\PolicyForm'
+    _title: 'Retention Policy & Schedule'
+  requirements:
+    _permission: 'administer restic backup'
+
+restic_backup.snapshots_list:
+  path: '/admin/config/system/restic-backup/snapshots'
+  defaults:
+    _controller: '\Drupal\restic_backup\Controller\SnapshotController::listSnapshots'
+    _title: 'Backup Snapshots'
+  requirements:
+    _permission: 'administer restic backup'
+
+restic_backup.logs:
+  path: '/admin/config/system/restic-backup/logs'
+  defaults:
+    _controller: '\Drupal\restic_backup\Controller\LogController::viewLogs'
+    _title: 'Backup Logs'
+  requirements:
+    _permission: 'access restic backup logs'
+
+restic_backup.backup_now:
+  path: '/admin/config/system/restic-backup/backup-now'
+  defaults:
+    _controller: '\Drupal\restic_backup\Controller\DashboardController::backupNow'
+    _title: 'Start Backup'
+  requirements:
+    _permission: 'administer restic backup'
+    _method: 'POST'
+
+restic_backup.restore:
+  path: '/admin/config/system/restic-backup/restore'
+  defaults:
+    _form: '\Drupal\restic_backup\Form\RestoreForm'
+    _title: 'Restore from Snapshot'
+  requirements:
+    _permission: 'restore from backup'

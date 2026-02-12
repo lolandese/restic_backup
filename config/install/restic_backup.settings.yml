@@ -1,0 +1,15 @@
+# Default configuration - empty, user must do setup via admin forms
+binary_path: ''
+repo_type: local
+repo_path: ''
+encryption_enabled: false
+backup_schedule: '0 2 * * *'
+notify_on_failure: false
+notification_email: ''
+retention_policy:
+  keep_daily: 7
+  keep_weekly: 4
+  keep_monthly: 12
+  keep_yearly: 3
+included_paths: []
+excluded_paths: []

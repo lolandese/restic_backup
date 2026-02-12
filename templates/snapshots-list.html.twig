@@ -1,0 +1,44 @@
+{#
+/**
+ * Snapshots list template.
+ *
+ * @ingroup restic_backup
+ */
+#}
+
+<div class="restic-snapshots-list">
+  <h2>{{ 'Backup Snapshots'|trans }}</h2>
+
+  {% if snapshots %}
+    <table class="snapshots-table">
+      <thead>
+        <tr>
+          <th>{{ 'Snapshot ID'|trans }}</th>
+          <th>{{ 'Date'|trans }}</th>
+          <th>{{ 'Size'|trans }}</th>
+          <th>{{ 'Files'|trans }}</th>
+          <th>{{ 'Actions'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for snapshot in snapshots %}
+          <tr>
+            <td><code>{{ snapshot.id }}</code></td>
+            <td>{{ snapshot.time|date }}</td>
+            <td>{{ snapshot.total_size|format_bytes }}</td>
+            <td>{{ snapshot.file_count }}</td>
+            <td>
+              <a href="{{ path('restic_backup.restore', {'snapshot_id': snapshot.id}) }}" class="button">
+                {{ 'Restore'|trans }}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="messages messages--info">
+      {{ 'No snapshots found.'|trans }}
+    </div>
+  {% endif %}
+</div>

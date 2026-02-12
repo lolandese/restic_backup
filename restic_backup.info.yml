@@ -1,0 +1,18 @@
+name: 'Restic Backup'
+description: 'Intelligent, incremental file backups for Drupal using Restic'
+type: module
+core_version_requirement: '>=10.3 | >=11'
+version: 0.1.0-alpha
+
+dependencies:
+  - drupal:file
+  - drupal:system
+  - drupal:config
+
+package: 'Backup and Migration'
+
+# Additional metadata for Drupal.org
+# Maintainers and license info updated during release
+# maintainers:
+#   - username
+# license: GPL-2.0-or-later

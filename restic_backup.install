@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for restic_backup module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function restic_backup_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    // Check if git is available
+    $git_available = shell_exec('which git 2>&1');
+    $requirements['restic_backup_git'] = [
+      'title' => t('Restic Backup: git command'),
+      'value' => $git_available ? t('Available') : t('Not found'),
+      'description' => $git_available ? t('git is available for .gitignore parsing.') : t(
+        'git command is required for intelligent .gitignore-based file discovery. ' .
+        'Please install git or enable the restic_backup_git extension.'
+      ),
+      'severity' => $git_available ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+    ];
+
+    // Check if restic binary is configured
+    $config = \Drupal::config('restic_backup.settings');
+    $binary_path = $config->get('binary_path');
+    $restic_found = $binary_path && file_exists($binary_path);
+
+    $requirements['restic_backup_binary'] = [
+      'title' => t('Restic Backup: restic binary'),
+      'value' => $restic_found ? t('Configured') : t('Not configured'),
+      'description' => $restic_found ? t('Restic binary is available at @path.', ['@path' => $binary_path]) : t(
+        'The restic binary is not configured. Go to ' .
+        '<a href="@url">Restic Backup Settings</a> to configure it.',
+        ['@url' => '/admin/config/system/restic-backup/setup']
+      ),
+      'severity' => $restic_found ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function restic_backup_install() {
+  \Drupal::messenger()->addStatus(
+    t('Restic Backup module installed successfully. Go to <a href="@url">the configuration page</a> to get started.',
+      ['@url' => '/admin/config/system/restic-backup'])
+  );
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function restic_backup_uninstall() {
+  // Note: We do NOT delete the Restic repository or backups on uninstall
+  // The user's backup data is too important to risk deletion
+  \Drupal::messenger()->addWarning(
+    t('Restic Backup module uninstalled. Your backup repository and snapshots remain intact at @path. ' .
+      'You can manage them manually using the restic command-line tool.',
+      ['@path' => \Drupal::config('restic_backup.settings')->get('repo_path')])
+  );
+}

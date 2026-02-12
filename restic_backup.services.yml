@@ -1,0 +1,29 @@
+services:
+  restic_backup.manager:
+    class: Drupal\restic_backup\Service\ResticManager
+    arguments:
+      - '@logger.channel.restic_backup'
+      - '@config.factory'
+      - '@file_system'
+
+  restic_backup.file_discovery:
+    class: Drupal\restic_backup\Service\FileDiscoveryService
+    arguments:
+      - '@file_system'
+      - '@cache.default'
+
+  restic_backup.encryption_validator:
+    class: Drupal\restic_backup\Service\EncryptionValidator
+    arguments:
+      - '@restic_backup.manager'
+      - '@logger.channel.restic_backup'
+
+  restic_backup.backup_logger:
+    class: Drupal\restic_backup\Service\BackupLogger
+    arguments:
+      - '@database'
+      - '@logger.channel.restic_backup'
+
+  logger.channel.restic_backup:
+    parent: logger.channel_base
+    arguments: ['restic_backup']

@@ -1,0 +1,43 @@
+# Local tasks (tabs) for Restic Backup admin pages
+
+restic_backup.dashboard_tab:
+  route_name: restic_backup.admin_page
+  title: 'Dashboard'
+  base_route: restic_backup.admin_page
+  weight: -10
+
+restic_backup.setup_tab:
+  route_name: restic_backup.admin_setup
+  title: 'Setup'
+  base_route: restic_backup.admin_page
+  weight: 0
+
+restic_backup.files_tab:
+  route_name: restic_backup.admin_files
+  title: 'Files'
+  base_route: restic_backup.admin_page
+  weight: 10
+
+restic_backup.policy_tab:
+  route_name: restic_backup.admin_policy
+  title: 'Policy'
+  base_route: restic_backup.admin_page
+  weight: 20
+
+restic_backup.restore_tab:
+  route_name: restic_backup.restore
+  title: 'Restore'
+  base_route: restic_backup.admin_page
+  weight: 30
+
+restic_backup.snapshots_tab:
+  route_name: restic_backup.snapshots_list
+  title: 'Snapshots'
+  base_route: restic_backup.admin_page
+  weight: 40
+
+restic_backup.logs_tab:
+  route_name: restic_backup.logs
+  title: 'Logs'
+  base_route: restic_backup.admin_page
+  weight: 50

@@ -1,0 +1,77 @@
+# Config schema for restic_backup module
+restic_backup.settings:
+  type: config_object
+  label: 'Restic Backup Settings'
+  mapping:
+    binary_path:
+      type: string
+      label: 'Restic Binary Path'
+      description: 'Full path to restic executable'
+
+    repo_type:
+      type: string
+      label: 'Repository Type'
+      description: 'local, sftp, s3, etc.'
+
+    repo_path:
+      type: string
+      label: 'Repository Path or URL'
+      description: 'Local path or remote URL to Restic repository'
+
+    encryption_enabled:
+      type: boolean
+      label: 'Encryption Enabled'
+      description: 'Whether Restic repository is encrypted'
+
+    backup_schedule:
+      type: string
+      label: 'Backup Schedule'
+      description: 'Cron expression for automatic backups'
+
+    notify_on_failure:
+      type: boolean
+      label: 'Notify on Failure'
+      description: 'Send email notification when backup fails'
+
+    notification_email:
+      type: email
+      label: 'Notification Email'
+      description: 'Email address to receive failure notifications'
+
+    retention_policy:
+      type: mapping
+      label: 'Snapshot Retention Policy'
+      mapping:
+        keep_daily:
+          type: integer
+          label: 'Keep Daily Snapshots'
+          description: 'Number of daily snapshots to keep'
+
+        keep_weekly:
+          type: integer
+          label: 'Keep Weekly Snapshots'
+          description: 'Number of weekly snapshots to keep'
+
+        keep_monthly:
+          type: integer
+          label: 'Keep Monthly Snapshots'
+          description: 'Number of monthly snapshots to keep'
+
+        keep_yearly:
+          type: integer
+          label: 'Keep Yearly Snapshots'
+          description: 'Number of yearly snapshots to keep'
+
+    included_paths:
+      type: sequence
+      label: 'Paths to Include'
+      description: 'Paths selected by user to backup'
+      sequence:
+        type: string
+
+    excluded_paths:
+      type: sequence
+      label: 'Paths to Exclude'
+      description: 'Paths explicitly excluded from backup'
+      sequence:
+        type: string
