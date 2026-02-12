@@ -2,11 +2,13 @@
 
 Intelligent, incremental file backups for Drupal using the free, open-source **Restic** tool.
 
-## Key Advantages
+## About Restic (Free, Open Source)
 
-- **✅ Open Source & Free**: No subscription fees or vendor lock-in
+This module leverages **Restic**, a completely free and open-source backup tool:
+
+- **✅ Completely Free**: No subscription fees, no vendor lock-in, BSD 2-Clause License
 - **✅ Self-Hosted**: Run backups on your own servers or cloud accounts you control
-- **✅ Powerful & Efficient**: Incremental backups, deduplication, encryption, multiple storage backends
+- **✅ Powerful Features**: Incremental backups, deduplication, encryption, multiple storage backends
 
 ## Overview
 
